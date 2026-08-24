@@ -42,8 +42,14 @@ See: `.planning/PROJECT.md` (updated 2026-08-24)
 
 ## Current Position
 
-**Phase:** 1 (not planned)
-**Next:** `/gsd-discuss-phase 1`
+**Phase:** 1 (context gathered — ready to plan)
+**Next:** `/gsd-plan-phase 1 --auto`
+
+## Session Continuity
+
+Last session: 2026-08-24
+Stopped at: Phase 1 context gathered (01-CONTEXT.md); cadena automática activa → plan-phase
+Resume file: `.planning/phases/01-fundaci-n-e-identidad-segura/01-CONTEXT.md`
 
 ## Blockers / Gates
 
