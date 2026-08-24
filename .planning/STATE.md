@@ -33,8 +33,7 @@ See: `.planning/PROJECT.md` (updated 2026-08-24)
 
 ## Blockers / Gates
 
-- ⚠ **Stack framework sin aprobar** (research/STACK.md): Rails 8.1 recomendado; decisión del usuario requerida antes de scaffold de Fase 1 (AUTONOMY_POLICY #11).
-- GSD agents no instalados en este runtime (`~/.claude/agents`): research/roadmap generados inline. Instalables con `npx get-shit-done-cc@latest --global` si se desea orchestration completa.
+- GSD agents no instalados en este runtime (`~/.claude/agents`): research/roadmap/discuss generados inline. Instalables con `npx get-shit-done-cc@latest --global` si se desea orchestration completa.
 - Decisiones abiertas PRD OD-001..OD-015: no resolverlas durante desarrollo sin escalar al usuario.
 
 ## Recent Decisions Log
@@ -43,6 +42,7 @@ See: `.planning/PROJECT.md` (updated 2026-08-24)
 |---|----------|------|--------------|
 | 1 | Inicialización GSD sobre repo existente captia-dashboard/ (bootstrap) | 2026-08-24 | all |
 | 2 | Granularidad standard (8 fases mvp verticales) por volumen de 155 reqs y RISK-001 | 2026-08-24 | roadmap |
+| 3 | Stack aprobado: Ruby on Rails 8.1 + Hotwire + Solid Queue/Cache/Cable (Opción A de research/STACK.md) | 2026-08-24 | Fase 1 desbloqueada; ADR pendiente en scaffold |
 
 ---
 *Last updated: 2026-08-24 after project initialization*

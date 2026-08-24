@@ -91,7 +91,7 @@ Que el cliente pueda entender y supervisar de forma clara qué servicios tiene c
 | Outbox + trabajos en PostgreSQL (ADR-0005) | Menor dependencia operativa; consistencia transaccional | — Pending |
 | Custodia de contenido sensible en Captia (ADR-0006) | Vistas, históricos y exportación consistentes | ⚠️ Requiere diseño privacidad/retención |
 | Infraestructura autoalojada (ADR-0007) | Control de datos y reducción de lock-in | — Pending |
-| Stack framework/lenguaje | ADRs fijan persistencia y topología pero no framework | ⚠️ Pendiente aprobación — ver research/STACK.md |
+| Ruby on Rails 8.1 + Hotwire + Solid Queue/Cache/Cable sobre PostgreSQL | Encaje directo con outbox/jobs en PG (ADR-0005), identidad nativa sobre auth generator, server-rendered responsive | ✓ Aprobado por usuario 2026-08-24 — ver research/STACK.md |
 
 ## Evolution
 

@@ -15,11 +15,11 @@
 
 **Consecuencia directa:** el framework elegido debe convivir bien con PostgreSQL como único almacén (incluida cola de trabajos), permitir control fino de SQL (RLS, `SET app.*`), y soportar HTML server-rendered responsive + API privada versionada.
 
-## ⚠ DECISIÓN ABIERTA — requiere aprobación del usuario
+## ✅ DECISIÓN APROBADA POR EL USUARIO (2026-08-24): Opción A
 
-El lenguaje/framework NO está decidido por ningún ADR. Adoptar un framework principal exige involucrar al usuario (AUTONOMY_POLICY §"Decisions requiring user involvement" #11). Recomendación pendiente; no implementar hasta aprobar.
+El lenguaje/framework no estaba decidido por ningún ADR y adoptarlo exigía implicar al usuario (AUTONOMY_POLICY #11). **El usuario aprobó la Opción A el 2026-08-24.** Documentar como ADR durante el scaffold de la Fase 1 (CONSTITUTION §4).
 
-### Opción A — Ruby on Rails 8.1 + Hotwire (RECOMENDADA) · Confianza: alta en versión, media-alta en ajuste
+### Opción A — Ruby on Rails 8.1 + Hotwire ✅ APROBADA · Confianza: alta en versión, media-alta en ajuste
 
 - Rails **8.1.x** es la rama soportada actual (8.0 EOL nov-2026); Ruby 3.4 recomendado. *Verificado: rubyonrails.org/releases, endoflife.date/rails (ago-2026).*
 - **Solid Queue/Cache/Cable** = outbox/jobs/caché/pubsub sobre PostgreSQL puro → encaja 1:1 con ADR-0005 sin componentes extra.
