@@ -9,8 +9,8 @@ Fuente: `docs/product/PRD.md` (§7 FRs, §8 NFRs, §10 ACs). Cada requisito cons
 
 ### Tenancy: cuentas, organizaciones y usuarios
 
-- [ ] **TEN-01**: Crear y gestionar cuentas comerciales (FR-001)
-- [ ] **TEN-02**: Una cuenta contiene una o más organizaciones (FR-002)
+- [x] **TEN-01**: Crear y gestionar cuentas comerciales (FR-001)
+- [x] **TEN-02**: Una cuenta contiene una o más organizaciones (FR-002)
 - [ ] **TEN-03**: Usuarios con acceso nivel cuenta y usuarios limitados a organizaciones concretas (FR-003)
 - [ ] **TEN-04**: Un usuario accede a varias organizaciones si sus permisos lo autorizan (FR-004)
 - [ ] **TEN-05**: Acceso a una organización no concede acceso automático a otras de la misma cuenta (FR-005)
@@ -206,7 +206,7 @@ Fuente: `docs/product/PRD.md` (§7 FRs, §8 NFRs, §10 ACs). Cada requisito cons
 
 ### Transversales (seguridad y calidad)
 
-- [ ] **SEG-01**: Aislamiento: ningún usuario accede a cuentas/organizaciones sin permiso (NFR-001)
+- [x] **SEG-01**: Aislamiento: ningún usuario accede a cuentas/organizaciones sin permiso (NFR-001)
 - [ ] **SEG-02**: MFA obligatorio para todos los usuarios internos (NFR-002)
 - [ ] **SEG-03**: Posibilidad de exigir MFA a todos los usuarios de una organización cliente (NFR-003)
 - [ ] **SEG-04**: Sesiones de impersonación registran actor real, impersonado y acciones (NFR-004)
