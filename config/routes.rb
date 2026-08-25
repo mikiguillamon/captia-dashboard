@@ -7,6 +7,11 @@ Rails.application.routes.draw do
   # Walking skeleton: organizaciones de la cuenta autenticada.
   resources :organizations, only: %i[index create]
 
+  # MFA (01-02): enrollment TOTP y challenge post-password.
+  get "/mfa/enrollment", to: "auth/mfa/enrollments#new", as: :mfa_enrollment
+  post "/mfa/enrollment", to: "auth/mfa/enrollments#create"
+  resource :mfa_challenge, only: %i[new create], controller: "auth/mfa/challenges"
+
   resources :passwords, param: :token
 
   # Salud para balanceadores (200/500 sin autenticar).

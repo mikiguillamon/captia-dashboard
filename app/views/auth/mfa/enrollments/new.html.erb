@@ -1,0 +1,41 @@
+<% content_for :title, "Activar verificación en dos pasos" %>
+
+<main class="min-h-screen bg-white">
+  <div class="max-w-md mx-auto px-4 py-8 space-y-4">
+    <h1 class="text-xl font-semibold">Activar verificación en dos pasos</h1>
+    <p class="text-sm text-slate-600">
+      Escanea este código QR con tu app autenticadora (TOTP) e introduce el código de 6 dígitos para confirmar.
+    </p>
+
+    <% if flash[:alert] %>
+      <p role="alert" aria-live="polite" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-4 py-2">
+        <%= flash[:alert] %>
+      </p>
+    <% end %>
+
+    <div class="bg-slate-100 rounded-lg p-6 flex justify-center">
+      <%= @qr_svg %>
+    </div>
+
+    <details class="text-xs text-slate-500 break-all">
+      <summary class="cursor-pointer">Introducir el secreto manualmente</summary>
+      <code class="select-all"><%= @enrollment.secret %></code>
+    </details>
+
+    <%= form_with url: mfa_enrollment_path, method: :post, class: "space-y-3" do |form| %>
+      <div class="space-y-1">
+        <%= form.label :code, "Código de la app autenticadora", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.text_field :code,
+              inputmode: "numeric",
+              autocomplete: "one-time-code",
+              maxlength: 6,
+              required: true,
+              autofocus: true,
+              class: "w-40 rounded-md border-slate-300 bg-white px-3 py-2 tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+      </div>
+      <%= form.submit "Confirmar activación",
+            data: { turbo_submits_with: "Comprobando…" },
+            class: "rounded-md bg-blue-600 text-white text-sm font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer" %>
+    <% end %>
+  </div>
+</main>

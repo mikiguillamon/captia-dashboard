@@ -1,0 +1,22 @@
+<% content_for :title, "Códigos de recuperación" %>
+
+<main class="min-h-screen bg-white">
+  <div class="max-w-md mx-auto px-4 py-8 space-y-4">
+    <h1 class="text-xl font-semibold">Verificación en dos pasos activada</h1>
+
+    <p class="text-sm text-slate-600">
+      Guarda estos códigos de recuperación en un lugar seguro.
+      <strong>Cada uno se puede usar una sola vez</strong> y
+      <strong>no volveremos a mostrarlos</strong>.
+    </p>
+
+    <ul class="bg-slate-100 rounded-lg p-6 grid grid-cols-2 gap-2 font-mono text-sm">
+      <% @recovery_codes.each do |code| %>
+        <li><%= code %></li>
+      <% end %>
+    </ul>
+
+    <%= link_to "Volver al inicio", root_path,
+          class: "inline-block text-blue-600 hover:underline font-medium" %>
+  </div>
+</main>

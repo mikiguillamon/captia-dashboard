@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_073000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_25_194851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,12 +20,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_073000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "mfa_enrollments", force: :cascade do |t|
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.integer "last_used_timestep", default: 0, null: false
+    t.text "secret", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_mfa_enrollments_on_user_id", unique: true
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_organizations_on_account_id"
+  end
+
+  create_table "recovery_codes", force: :cascade do |t|
+    t.string "code_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "used_at"
+    t.bigint "user_id", null: false
+    t.index ["user_id", "code_digest"], name: "index_recovery_codes_on_user_id_and_code_digest"
+    t.index ["user_id"], name: "index_recovery_codes_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -47,7 +67,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_073000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "mfa_enrollments", "users"
   add_foreign_key "organizations", "accounts"
+  add_foreign_key "recovery_codes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "accounts"
 end
