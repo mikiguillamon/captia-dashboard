@@ -1,0 +1,33 @@
+# PostgreSQL (ADR-0002: única persistencia, RLS como segunda barrera).
+# Rails se conecta SIEMPRE con el rol no-superusuario captia_app (ver db/init/01-roles.sql).
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("PGHOST") { "127.0.0.1" } %>
+  port: <%= ENV.fetch("PGPORT") { 5432 } %>
+  username: <%= ENV.fetch("PGUSER") { "captia_app" } %>
+  # Contraseña SOLO del contenedor desechable de desarrollo (ver db/init/01-roles.sql).
+  # Producción la provee siempre vía DATABASE_URL.
+  password: <%= ENV.fetch("PGPASSWORD") { "captia" } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("PGDATABASE") { "captia_dev" } %>
+
+test:
+  <<: *default
+  database: captia_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    <<: *primary_production
+    database: captia_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: captia_production_queue
+    migrations_paths: db/queue_migrate

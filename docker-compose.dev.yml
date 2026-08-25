@@ -1,0 +1,26 @@
+# Entorno de desarrollo local — Captia Dashboard
+# PostgreSQL 16 autoalojado (único almacén: datos + cola Solid Queue + caché) — ADR-0002/0005.
+# Uso: docker compose -f docker-compose.dev.yml up -d
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: captia-db-dev
+    environment:
+      # Credenciales SOLO para el contenedor desechable de desarrollo.
+      # El superusuario del cluster es 'postgres'; Rails NUNCA lo usa (ver db/init/01-roles.sql).
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: captia_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - captia_pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d captia_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  captia_pgdata:
