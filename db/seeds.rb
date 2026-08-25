@@ -6,7 +6,7 @@ Tenancy::Context.provisioning do
   alpha = Tenancy::Account.find_or_create_by!(name: "Alpha Demo")
 
   Tenancy::Context.with(account_id: alpha.id) do
-    ["Alpha Ops", "Alpha Growth", "Alpha Labs"].each do |nombre|
+    [ "Alpha Ops", "Alpha Growth", "Alpha Labs" ].each do |nombre|
       Tenancy::Organization.find_or_create_by!(account: alpha, name: nombre)
     end
   end
