@@ -24,6 +24,18 @@
   </head>
 
   <body>
+    <% if flash[:alert] %>
+      <div role="alert" aria-live="polite"
+           class="bg-red-50 border-b border-red-200 text-red-700 text-sm px-4 py-2">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+    <% if notice %>
+      <div role="status" aria-live="polite"
+           class="bg-slate-100 border-b border-slate-200 text-slate-700 text-sm px-4 py-2">
+        <%= notice %>
+      </div>
+    <% end %>
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>

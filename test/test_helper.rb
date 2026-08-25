@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "test_helpers/session_test_helper"
 
 # El dumper de schema.rb no serializa políticas RLS: las aplicamos de forma
 # idempotente en la base de tests (serializado con advisory lock para
@@ -27,9 +28,10 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
-
+    # Sin fixtures: los tests crean sus propios datos. El chequeo previo de FK
+    # de FixtureSet escribe en pg_catalog.pg_constraint, vedado al rol
+    # no-superusuario captia_app (ADR-0002).
+    #
     # Add more helper methods to be used by all tests here...
   end
 end
