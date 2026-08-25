@@ -4,8 +4,10 @@
 -- no-superusuario captia_app como propietario de objetos, cubierto por FORCE ROW LEVEL SECURITY.
 \set ON_ERROR_STOP on
 
+-- CREATEDB permite a Rails preparar captia_test vía db:prepare/db:test:prepare.
+-- Sigue siendo NOSUPERUSER y NOBYPASSRLS: las políticas RLS le aplican siempre.
 CREATE ROLE captia_app LOGIN PASSWORD 'captia'
-  NOSUPERUSER NOCREATEDB NOBYPASSRLS;
+  NOSUPERUSER CREATEDB NOBYPASSRLS;
 
 ALTER DATABASE captia_dev OWNER TO captia_app;
 CREATE DATABASE captia_test OWNER captia_app;
