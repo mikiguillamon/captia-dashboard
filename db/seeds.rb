@@ -1,9 +1,18 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Datos demo idempotentes para desarrollo (AC-001 futuro: 1 cuenta, 3 organizaciones).
+# El alta de cuentas es provisión interna → Tenancy::Context.provisioning;
+# las organizaciones se escriben ya bajo el contexto de SU cuenta (D-07).
+
+Tenancy::Context.provisioning do
+  alpha = Tenancy::Account.find_or_create_by!(name: "Alpha Demo")
+
+  Tenancy::Context.with(account_id: alpha.id) do
+    ["Alpha Ops", "Alpha Growth", "Alpha Labs"].each do |nombre|
+      Tenancy::Organization.find_or_create_by!(account: alpha, name: nombre)
+    end
+  end
+
+  demo = User.find_or_create_by!(email_address: "demo@captia.test") do |u|
+    u.password = "captia-demo-2026"
+  end
+  demo.update!(account: alpha) unless demo.account_id == alpha.id
+end

@@ -1,0 +1,24 @@
+<% content_for :title, "Organizaciones" %>
+
+<main class="min-h-screen bg-white">
+  <div class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <header class="flex items-center justify-between">
+      <h1 class="text-xl font-semibold text-slate-900">Organizaciones</h1>
+    </header>
+
+    <ul id="organizations" class="space-y-2">
+      <%= render partial: "organizations/organization", collection: @organizations %>
+    </ul>
+
+    <% if @organizations.empty? %>
+      <div id="empty_state" class="bg-slate-100 rounded-lg p-6 text-center space-y-2">
+        <h2 class="text-lg font-semibold text-slate-900">Sin organizaciones todavía</h2>
+        <p class="text-slate-600">Tu cuenta aún no tiene organizaciones. Contacta con el equipo de Captia para configurarlas.</p>
+      </div>
+    <% end %>
+
+    <%= turbo_frame_tag "new_organization" do %>
+      <%= render "organizations/form", organization: @organization %>
+    <% end %>
+  </div>
+</main>

@@ -68,3 +68,5 @@ end
 
 gem "rotp", "~> 6.3"
 gem "rqrcode", "~> 3.2"
+
+gem "cuprite", "~> 0.17"

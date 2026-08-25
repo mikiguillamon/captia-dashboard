@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   post "/login", to: "auth/sessions#create", as: :login
   delete "/logout", to: "auth/sessions#destroy"
 
+  # Walking skeleton: organizaciones de la cuenta autenticada.
+  resources :organizations, only: %i[index create]
+
   resources :passwords, param: :token
 
   # Salud para balanceadores (200/500 sin autenticar).
