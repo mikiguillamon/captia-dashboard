@@ -256,9 +256,9 @@ El PRD no difiere funcionalidad a v2: todo lo no incluido está explícitamente 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEN-01..TEN-11 | Phase 1 | Pending |
-| AUTH-01..AUTH-07 | Phase 1 | Pending |
-| SEG-01..SEG-05, SEG-11 | Phase 1 | Pending |
+| TEN-01..TEN-11 | Phase 1 | Complete (2026-08-26) |
+| AUTH-01..AUTH-07 | Phase 1 | Complete (2026-08-26) |
+| SEG-01..SEG-05, SEG-11 | Phase 1 | Complete (2026-08-26) |
 | CRM-01..CRM-10 | Phase 2 | Pending |
 | SERV-01..SERV-10 | Phase 2 | Pending |
 | ACT-01..ACT-08 | Phase 3 | Pending |
