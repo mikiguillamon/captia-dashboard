@@ -23,9 +23,9 @@ Fuente: `docs/product/PRD.md` (§7 FRs, §8 NFRs, §10 ACs). Cada requisito cons
 
 ### Autenticación e impersonación
 
-- [ ] **AUTH-01**: Todos los usuarios usan cuentas individuales (FR-012)
-- [ ] **AUTH-02**: MFA obligatorio para usuarios internos (FR-013)
-- [ ] **AUTH-03**: Una organización cliente puede exigir MFA a sus usuarios (FR-014)
+- [x] **AUTH-01**: Todos los usuarios usan cuentas individuales (FR-012)
+- [x] **AUTH-02**: MFA obligatorio para usuarios internos (FR-013)
+- [x] **AUTH-03**: Una organización cliente puede exigir MFA a sus usuarios (FR-014)
 - [ ] **AUTH-04**: Perfiles internos autorizados pueden impersonar usuarios cliente (FR-015)
 - [ ] **AUTH-05**: La sesión de impersonación permite exactamente las operaciones del usuario impersonado (FR-016)
 - [ ] **AUTH-06**: Registro del actor interno real en todas las acciones durante impersonación (FR-017)
@@ -207,8 +207,8 @@ Fuente: `docs/product/PRD.md` (§7 FRs, §8 NFRs, §10 ACs). Cada requisito cons
 ### Transversales (seguridad y calidad)
 
 - [x] **SEG-01**: Aislamiento: ningún usuario accede a cuentas/organizaciones sin permiso (NFR-001)
-- [ ] **SEG-02**: MFA obligatorio para todos los usuarios internos (NFR-002)
-- [ ] **SEG-03**: Posibilidad de exigir MFA a todos los usuarios de una organización cliente (NFR-003)
+- [x] **SEG-02**: MFA obligatorio para todos los usuarios internos (NFR-002)
+- [x] **SEG-03**: Posibilidad de exigir MFA a todos los usuarios de una organización cliente (NFR-003)
 - [ ] **SEG-04**: Sesiones de impersonación registran actor real, impersonado y acciones (NFR-004)
 - [ ] **SEG-05**: Auditoría de seguridad/administración visible solo a internos autorizados (NFR-005)
 - [ ] **SEG-06**: Evento aceptado visible en vistas operativas en ≤30 segundos objetivo (NFR-006)
