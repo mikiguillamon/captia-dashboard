@@ -6,6 +6,10 @@
       <h1 class="text-xl font-semibold text-slate-900">Organizaciones</h1>
     </header>
 
+    <% if accessible_organizations.any? %>
+      <%= render "shared/org_switcher" %>
+    <% end %>
+
     <ul id="organizations" class="space-y-2">
       <%= render partial: "organizations/organization", collection: @organizations %>
     </ul>

@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   delete "/logout", to: "auth/sessions#destroy"
 
   # Walking skeleton: organizaciones de la cuenta autenticada.
-  resources :organizations, only: %i[index create]
+  resources :organizations, only: %i[index create] do
+    collection { post :switch }
+  end
 
   # MFA (01-02): enrollment TOTP y challenge post-password.
   get "/mfa/enrollment", to: "auth/mfa/enrollments#new", as: :mfa_enrollment

@@ -1,20 +1,35 @@
 # frozen_string_literal: true
 
 # Walking skeleton: dashboard de organizaciones de la cuenta del usuario.
-# Toda lectura/escritura tenant viaja dentro de Tenancy::Context (D-07).
+# Toda lectura/escritura tenant viaja dentro de Tenancy::Context (D-07);
+# la organización activa pasa por OrganizationScoping (AC-001).
 class OrganizationsController < ApplicationController
+  include OrganizationScoping
+
+  before_action :require_organization_membership!, only: :create
+
   def index
-    @organizations = Tenancy::Context.with(account_id: current_account_id) do
-      Tenancy::Organization.order(:created_at).to_a
+    account_id = current_account_id
+    org_id = current_organization&.id
+
+    # AC-001: SOLO organizaciones accesibles para el usuario (la RLS es la
+    # segunda barrera a nivel cuenta; la visibilidad por organización es app).
+    @organizations = accessible_organizations
+    Tenancy::Context.with(account_id: account_id, organization_id: org_id) do
+      # El contexto queda fijado también para renders parciales del request.
+      @organization ||= Tenancy::Organization.new
     end
-    @organization = Tenancy::Organization.new
   end
 
   def create
     created = nil
-    Tenancy::Context.with(account_id: current_account_id) do
-      created = Tenancy::Organization.create!(organization_params.merge(account_id: current_account_id))
+    account_id = current_account_id
+    org_id = current_organization&.id
+
+    Tenancy::Context.with(account_id: account_id, organization_id: org_id) do
+      created = Tenancy::Organization.create!(organization_params.merge(account_id: account_id))
     end
+    set_active_organization!(created)
 
     respond_to do |format|
       format.turbo_stream do
@@ -39,6 +54,15 @@ class OrganizationsController < ApplicationController
       end
       format.html { redirect_to organizations_path, alert: e.record.errors.full_messages.to_sentence }
     end
+  end
+
+  # Selector de organización activa (AC-001): valida acceso antes de fijarla.
+  def switch
+    target = accessible_organizations.find { |o| o.id == params[:organization_id].to_i }
+    return head :forbidden unless target
+
+    set_active_organization!(target)
+    redirect_to organizations_path, notice: "Organización activa: #{target.name}."
   end
 
   private

@@ -1,0 +1,10 @@
+<%# Selector AC-001: SOLO organizaciones con acceso del usuario. %>
+<div role="navigation" aria-label="Selector de organización"
+     class="flex flex-wrap gap-2 items-center">
+  <% accessible_organizations.each do |org| %>
+    <%= button_to org.name, switch_organizations_path(organization_id: org.id),
+          method: :post,
+          "aria-current": (org.id == current_organization&.id ? "true" : nil),
+          class: "rounded-md px-3 py-1 text-sm font-medium border #{org.id == current_organization&.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-300 hover:border-blue-600'}" %>
+  <% end %>
+</div>
