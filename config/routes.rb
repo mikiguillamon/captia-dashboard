@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # MFA (01-02): enrollment TOTP y challenge post-password.
   get "/mfa/enrollment", to: "auth/mfa/enrollments#new", as: :mfa_enrollment
   post "/mfa/enrollment", to: "auth/mfa/enrollments#create"
-  resource :mfa_challenge, only: %i[new create], controller: "auth/mfa/challenges"
+  resource :mfa_challenge, only: %i[new create destroy], controller: "auth/mfa/challenges"
 
   resources :passwords, param: :token
 

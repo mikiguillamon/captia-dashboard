@@ -1,0 +1,37 @@
+<% content_for :title, "Verificación en dos pasos" %>
+
+<main class="min-h-screen flex items-center justify-center bg-white px-4">
+  <section class="w-full max-w-sm bg-slate-100 rounded-lg p-6 space-y-4" aria-labelledby="challenge-heading">
+    <h1 id="challenge-heading" class="text-xl font-semibold text-slate-900 leading-tight">
+      Verificación en dos pasos
+    </h1>
+    <p class="text-sm text-slate-600">Introduce el código de 6 dígitos de tu app autenticadora o un código de recuperación.</p>
+
+    <% if flash[:alert] %>
+      <p role="alert" aria-live="polite"
+         class="text-sm text-red-600 bg-white border border-red-200 rounded-md px-4 py-2">
+        <%= flash[:alert] %>
+      </p>
+    <% end %>
+
+    <%= form_with url: mfa_challenge_path, method: :post, local: true, class: "space-y-4" do |form| %>
+      <div class="space-y-2">
+        <%= form.label :code, "Código de verificación", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.text_field :code,
+              inputmode: "numeric",
+              autocomplete: "one-time-code",
+              maxlength: 12,
+              required: true,
+              autofocus: true,
+              class: "w-40 rounded-md border-slate-300 bg-white px-3 py-2 tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+      </div>
+
+      <%= form.submit "Verificar código",
+            data: { turbo_submits_with: "Comprobando…" },
+            class: "w-full rounded-md bg-blue-600 text-white font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer" %>
+    <% end %>
+
+    <%= button_to "Cancelar e iniciar de nuevo", mfa_challenge_path, method: :delete,
+          class: "text-sm text-slate-500 hover:text-slate-700 bg-transparent border-0 p-0 cursor-pointer underline" %>
+  </section>
+</main>

@@ -19,8 +19,14 @@ module Auth
 
     def create
       if (user = User.authenticate_by(params.permit(:email_address, :password)))
-        start_new_session_for user
-        redirect_to after_authentication_url
+        if user.mfa_enrollment&.confirmed?
+          # AC-005: sin Session definitiva hasta superar el challenge TOTP.
+          session[:mfa_pending_user_id] = user.id
+          redirect_to new_mfa_challenge_path
+        else
+          start_new_session_for user
+          redirect_to after_authentication_url
+        end
       else
         redirect_to new_session_path, alert: GENERIC_ERROR, status: :see_other
       end
