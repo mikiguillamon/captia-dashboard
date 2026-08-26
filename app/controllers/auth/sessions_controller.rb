@@ -23,6 +23,9 @@ module Auth
           # AC-005: sin Session definitiva hasta superar el challenge TOTP.
           session[:mfa_pending_user_id] = user.id
           redirect_to new_mfa_challenge_path
+        elsif organization_requires_mfa?(user)
+          # AC-006: bloqueado SIN sesión; pantalla explicativa con copy UI-SPEC.
+          render "auth/mfa/required", status: :forbidden
         else
           start_new_session_for user
           redirect_to after_authentication_url

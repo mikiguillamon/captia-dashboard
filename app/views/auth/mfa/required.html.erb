@@ -1,0 +1,18 @@
+<% content_for :title, "Verificación adicional requerida" %>
+
+<main class="min-h-screen flex items-center justify-center bg-white px-4">
+  <section class="w-full max-w-sm bg-slate-100 rounded-lg p-6 space-y-4" aria-labelledby="mfa-required-heading">
+    <h1 id="mfa-required-heading" class="text-xl font-semibold text-slate-900 leading-tight">
+      Verificación adicional requerida
+    </h1>
+    <p role="alert" aria-live="polite" class="text-sm text-red-600">
+      Esta organización exige MFA. Actívalo desde tu perfil.
+    </p>
+    <p class="text-sm text-slate-600">
+      Tu cuenta pertenece a una organización que requiere verificación en dos pasos (TOTP).
+      Hasta que actives la verificación, no podrás acceder al portal.
+    </p>
+    <%= link_to "Volver a iniciar sesión", new_session_path,
+          class: "inline-block text-blue-600 hover:underline font-medium" %>
+  </section>
+</main>

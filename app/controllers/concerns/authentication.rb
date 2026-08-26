@@ -21,6 +21,21 @@ module Authentication
       resume_session || request_authentication
     end
 
+    # SEG-03 / AC-006 (puente skeleton): mientras no existan memberships
+    # (01-03), "organizaciones del usuario" = organizaciones de su cuenta.
+    # Si alguna exige MFA y el usuario carece de enrollment confirmado, el
+    # login se bloquea ANTES de crear Session de acceso.
+    def organization_requires_mfa?(user)
+      return false if user.account_id.nil?
+      return false if user.mfa_enrollment&.confirmed?
+
+      Tenancy::Context.with(account_id: user.account_id) do
+        Tenancy::Organization.where(require_mfa: true).exists?
+      end
+    rescue ActiveRecord::RecordNotFound
+      false
+    end
+
     def resume_session
       Current.session ||= find_session_by_cookie
     end
