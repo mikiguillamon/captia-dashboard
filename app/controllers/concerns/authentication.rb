@@ -23,8 +23,6 @@ module Authentication
 
     # SEG-03 / AC-006 (puente skeleton): mientras no existan memberships
     # (01-03), "organizaciones del usuario" = organizaciones de su cuenta.
-    # Si alguna exige MFA y el usuario carece de enrollment confirmado, el
-    # login se bloquea ANTES de crear Session de acceso.
     def organization_requires_mfa?(user)
       return false if user.account_id.nil?
       return false if user.mfa_enrollment&.confirmed?
@@ -36,12 +34,19 @@ module Authentication
       false
     end
 
+    # Sesiones con expires_at vencido se revocan al vuelo (D-06).
     def resume_session
       Current.session ||= find_session_by_cookie
+      if Current.session&.expired?
+        Current.session.destroy
+        cookies.delete(:session_id)
+        Current.session = nil
+      end
+      Current.session
     end
 
     def find_session_by_cookie
-      Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      Session.active.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
     end
 
     def request_authentication

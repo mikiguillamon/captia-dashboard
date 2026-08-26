@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   get "/invitations/accept", to: "invitations#new_accept", as: :accept_invitation
   post "/invitations/accept", to: "invitations#create_accept", as: :accept_invitations
 
+  # Impersonación auditada (D-06): iniciar exige re-auth del interno.
+  resource :impersonation, only: %i[new create destroy], controller: "admin/impersonations"
+
   # Recuperación de contraseña (D-05) bajo Auth:: con rutas planas.
   get "/password/forgot", to: "auth/passwords#new_forgot", as: :forgot_password
   post "/password/forgot", to: "auth/passwords#create_forgot"

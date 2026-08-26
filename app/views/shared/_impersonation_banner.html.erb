@@ -1,0 +1,14 @@
+<%# D-06: banner persistente durante impersonación — copy exacto UI-SPEC. %>
+<% if Current.impersonating? && Current.actor_effective.present? && Current.actor_real.present? %>
+  <div role="status" aria-live="polite"
+       data-controller="impersonation-banner"
+       class="bg-amber-100 border-b border-amber-300 text-amber-900 text-sm px-4 py-2 flex items-center justify-between gap-4">
+    <span>
+      Estás operando como <strong><%= Current.actor_effective.email_address %></strong>
+      a petición de <strong><%= Current.actor_real.email_address %></strong>.
+      Todas las acciones quedan registradas.
+    </span>
+    <%= button_to "Salir", impersonation_path, method: :delete,
+          class: "shrink-0 rounded-md bg-white border border-amber-400 text-amber-900 text-xs font-medium px-3 py-1 hover:bg-amber-50 cursor-pointer" %>
+  </div>
+<% end %>

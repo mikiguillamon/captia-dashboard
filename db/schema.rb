@@ -35,6 +35,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.index ["subject_type", "subject_id"], name: "index_audit_logs_on_subject"
   end
 
+  create_table "impersonations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "ended_at"
+    t.datetime "expires_at", null: false
+    t.bigint "initiator_id", null: false
+    t.datetime "started_at", null: false
+    t.bigint "target_user_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["initiator_id"], name: "index_impersonations_on_initiator_id"
+    t.index ["target_user_id", "ended_at"], name: "index_impersonations_on_target_user_id_and_ended_at"
+    t.index ["target_user_id"], name: "index_impersonations_on_target_user_id"
+  end
+
   create_table "invitations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
@@ -76,6 +89,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.boolean "allow_self_invite", default: false, null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.boolean "notify_impersonation", default: false, null: false
     t.boolean "require_mfa", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_organizations_on_account_id"
@@ -117,10 +131,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.boolean "impersonated", default: false, null: false
     t.string "ip_address"
     t.datetime "updated_at", null: false
     t.string "user_agent"
     t.bigint "user_id", null: false
+    t.index ["expires_at"], name: "index_sessions_on_expires_at"
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
@@ -136,6 +153,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
 
   add_foreign_key "audit_logs", "users", column: "actor_effective_id"
   add_foreign_key "audit_logs", "users", column: "actor_real_id"
+  add_foreign_key "impersonations", "users", column: "initiator_id"
+  add_foreign_key "impersonations", "users", column: "target_user_id"
   add_foreign_key "invitations", "organizations"
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "memberships", "organizations"
