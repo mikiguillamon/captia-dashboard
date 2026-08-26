@@ -34,6 +34,10 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # letter_opener: los emails se abren en el navegador en vez de enviarse.
+  # En producción se usa SMTP autoalojado vía variables SMTP_* (.env.example).
+  config.action_mailer.delivery_method = :letter_opener
+
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 

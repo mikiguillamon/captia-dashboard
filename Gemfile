@@ -70,3 +70,5 @@ gem "rotp", "~> 6.3"
 gem "rqrcode", "~> 3.2"
 
 gem "cuprite", "~> 0.17"
+
+gem "letter_opener", "~> 1.10", group: :development

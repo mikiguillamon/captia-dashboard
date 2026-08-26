@@ -1,0 +1,40 @@
+<% content_for :title, "Nueva contraseña" %>
+
+<main class="min-h-screen flex items-center justify-center bg-white px-4">
+  <section class="w-full max-w-sm bg-slate-100 rounded-lg p-6 space-y-4" aria-labelledby="reset-heading">
+    <h1 id="reset-heading" class="text-xl font-semibold text-slate-900 leading-tight">
+      Nueva contraseña
+    </h1>
+
+    <% if flash[:alert] %>
+      <p role="alert" aria-live="polite" class="text-sm text-red-600 bg-white border border-red-200 rounded-md px-4 py-2">
+        <%= flash[:alert] %>
+      </p>
+    <% end %>
+
+    <%= form_with url: reset_password_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+      <%= hidden_field_tag :token, @token %>
+
+      <div class="space-y-2">
+        <%= form.label :password, "Nueva contraseña (mínimo 12 caracteres)", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.password_field :password,
+              required: true,
+              minlength: 12,
+              autocomplete: "new-password",
+              class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= form.label :password_confirmation, "Confirmar contraseña", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.password_field :password_confirmation,
+              required: true,
+              autocomplete: "new-password",
+              class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+      </div>
+
+      <%= form.submit "Restablecer contraseña",
+            data: { turbo_submits_with: "Guardando…" },
+            class: "w-full rounded-md bg-blue-600 text-white font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer" %>
+    <% end %>
+  </section>
+</main>

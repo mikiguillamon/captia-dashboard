@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag "mailers", skip_pipeline: true rescue nil %>
+<div style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+  <h1 style="font-size: 20px; font-weight: 600;">Restablecer contraseña</h1>
+  <p>Hola <%= @user.email_address %>,</p>
+  <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta de Captia.
+     El enlace es válido durante 30 minutos y solo se puede usar una vez.</p>
+  <p>
+    <a href="<%= @reset_url %>"
+       style="display: inline-block; background: #2563EB; color: #fff; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+      Restablecer contraseña
+    </a>
+  </p>
+  <p style="color: #64748b; font-size: 14px;">
+    Si no solicitaste este cambio, ignora este mensaje; tu contraseña seguirá funcionando.
+  </p>
+</div>

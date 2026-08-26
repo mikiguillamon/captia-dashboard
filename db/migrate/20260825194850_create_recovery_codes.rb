@@ -9,6 +9,6 @@ class CreateRecoveryCodes < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
-    add_index :recovery_codes, [:user_id, :code_digest]
+    add_index :recovery_codes, [ :user_id, :code_digest ]
   end
 end

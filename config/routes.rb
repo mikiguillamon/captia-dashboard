@@ -14,6 +14,12 @@ Rails.application.routes.draw do
 
   resources :passwords, param: :token
 
+  # Recuperación de contraseña (D-05) bajo Auth:: con rutas planas.
+  get "/password/forgot", to: "auth/passwords#new_forgot", as: :forgot_password
+  post "/password/forgot", to: "auth/passwords#create_forgot"
+  get "/password/reset", to: "auth/passwords#new_reset", as: :reset_password
+  patch "/password/reset", to: "auth/passwords#update_reset"
+
   # Salud para balanceadores (200/500 sin autenticar).
   get "up" => "rails/health#show", as: :rails_health_check
 

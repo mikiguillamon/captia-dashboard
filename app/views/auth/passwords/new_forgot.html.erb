@@ -1,0 +1,32 @@
+<% content_for :title, "Restablecer contraseña" %>
+
+<main class="min-h-screen flex items-center justify-center bg-white px-4">
+  <section class="w-full max-w-sm bg-slate-100 rounded-lg p-6 space-y-4" aria-labelledby="forgot-heading">
+    <h1 id="forgot-heading" class="text-xl font-semibold text-slate-900 leading-tight">
+      Restablecer contraseña
+    </h1>
+    <p class="text-sm text-slate-600">Introduce tu correo y te enviaremos instrucciones.</p>
+
+    <% if flash[:alert] %>
+      <p role="alert" aria-live="polite" class="text-sm text-red-600 bg-white border border-red-200 rounded-md px-4 py-2">
+        <%= flash[:alert] %>
+      </p>
+    <% end %>
+
+    <%= form_with url: forgot_password_path, method: :post, local: true, class: "space-y-4" do |form| %>
+      <div class="space-y-2">
+        <%= form.label :email_address, "Correo electrónico", class: "block text-sm font-medium text-slate-700" %>
+        <%= form.email_field :email_address,
+              required: true,
+              autocomplete: "username",
+              autofocus: true,
+              class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+      </div>
+      <%= form.submit "Enviar instrucciones",
+            data: { turbo_submits_with: "Enviando…" },
+            class: "w-full rounded-md bg-blue-600 text-white font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer" %>
+    <% end %>
+
+    <%= link_to "Volver a iniciar sesión", new_session_path, class: "text-sm text-blue-600 hover:underline" %>
+  </section>
+</main>
