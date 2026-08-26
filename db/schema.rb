@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_203000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_203000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.string "action", null: false
+    t.bigint "actor_effective_id", null: false
+    t.bigint "actor_real_id", null: false
+    t.datetime "created_at", null: false
+    t.inet "ip"
+    t.bigint "subject_id"
+    t.string "subject_type"
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_audit_logs_on_action"
+    t.index ["actor_effective_id"], name: "index_audit_logs_on_actor_effective_id"
+    t.index ["actor_real_id"], name: "index_audit_logs_on_actor_real_id"
+    t.index ["subject_type", "subject_id"], name: "index_audit_logs_on_subject"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["organization_id"], name: "index_memberships_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
   create_table "mfa_enrollments", force: :cascade do |t|
@@ -60,6 +85,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_203000) do
     t.index ["user_id"], name: "index_recovery_codes_on_user_id"
   end
 
+  create_table "role_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "exception"
+    t.string "role", null: false
+    t.integer "scope_id", null: false
+    t.string "scope_type", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["scope_type", "scope_id"], name: "index_role_assignments_on_scope_type_and_scope_id"
+    t.index ["user_id", "scope_type", "scope_id"], name: "index_role_assignments_on_user_id_and_scope_type_and_scope_id"
+    t.index ["user_id"], name: "index_role_assignments_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -79,10 +117,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_203000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "audit_logs", "users", column: "actor_effective_id"
+  add_foreign_key "audit_logs", "users", column: "actor_real_id"
+  add_foreign_key "memberships", "organizations"
+  add_foreign_key "memberships", "users"
   add_foreign_key "mfa_enrollments", "users"
   add_foreign_key "organizations", "accounts"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "recovery_codes", "users"
+  add_foreign_key "role_assignments", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "accounts"
 end
