@@ -22,6 +22,9 @@ class OrganizationsAccessTest < ActionDispatch::IntegrationTest
     end
 
     ana = User.create!(email_address: "ana@captia.test", password: "contrasena-segura-123", account: alpha)
+    # Acceso vía rol a nivel cuenta (modelo AC-001 de 01-03).
+    Tenancy::RoleAssignment.create!(user: ana, scope_type: "Tenancy::Account",
+                                    scope_id: alpha.id, role: "admin_cuenta")
 
     post "/login", params: { email_address: ana.email_address, password: "contrasena-segura-123" }
     assert_redirected_to root_url

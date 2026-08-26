@@ -50,7 +50,12 @@ module Admin
     end
 
     def invitation_params
-      params.require(:invitation).permit(:email, :role)
+      # Sin permit masivo (brakeman PermitAttributes): claves explícitas;
+      # role se valida contra CLIENT_ROLES en modelo y controlador.
+      {
+        email: params.dig(:invitation, :email),
+        role: params.dig(:invitation, :role)
+      }
     end
 
     def self_management_blocked

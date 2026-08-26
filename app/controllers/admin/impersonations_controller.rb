@@ -4,6 +4,12 @@ module Admin
   # D-06 / AUTH-04..07 / SEG-04/05/11: impersonación con re-autenticación del
   # interno en el mismo request, expiración ≈30 min y auditoría actor real.
   class ImpersonationsController < ApplicationController
+    before_action :require_impersonate_capability, only: :new
+
+    def new
+      @targets = User.where.not(id: Current.user.id).order(:email_address)
+    end
+
     def create
       initiator = Current.user
       target = User.find_by(id: params[:target_user_id])
@@ -20,6 +26,14 @@ module Admin
     end
 
     private
+
+    # SEG-04: solo quien posea la capability sobre la cuenta activa ve el flujo.
+    def require_impersonate_capability
+      scope = Tenancy::Account.find_by(id: Current.user&.account_id)
+      return if scope && Current.user.can?(:impersonate, scope: scope)
+
+      render plain: "Forbidden", status: :forbidden
+    end
 
     def impersonation_allowed?(initiator, target, password)
       return false if target.nil?

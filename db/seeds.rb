@@ -9,7 +9,7 @@ Tenancy::Context.provisioning do
 
   orgs = {}
   Tenancy::Context.with(account_id: alpha.id) do
-    ["Alpha Ops", "Alpha Growth", "Alpha Labs"].each do |nombre|
+    [ "Alpha Ops", "Alpha Growth", "Alpha Labs" ].each do |nombre|
       orgs[nombre] = Tenancy::Organization.find_or_create_by!(account: alpha, name: nombre)
     end
   end
@@ -42,9 +42,9 @@ Tenancy::Context.provisioning do
                  memberships: orgs.values)
   growth = orgs["Alpha Growth"]
   demo_user.call("admin_org@captia.test", role: "admin_org", scope: growth,
-                 memberships: [growth])
+                 memberships: [ growth ])
   demo_user.call("operativo@captia.test", role: "operativo", scope: growth,
-                 memberships: [growth])
+                 memberships: [ growth ])
 
   demo = User.find_or_create_by!(email_address: "demo@captia.test") do |u|
     u.password = TENANCY_DEMO_PASSWORD

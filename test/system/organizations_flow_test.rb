@@ -8,6 +8,8 @@ class OrganizationsFlowTest < ApplicationSystemTestCase
   setup do
     @account = Tenancy::Context.provisioning { Tenancy::Account.create!(name: "Flow Co") }
     @user = User.create!(email_address: "flow@captia.test", password: "flow-secret-123", account: @account)
+    Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
+                                    scope_id: @account.id, role: "admin_cuenta")
   end
 
   test "login, crear organización por UI con Turbo y logout" do

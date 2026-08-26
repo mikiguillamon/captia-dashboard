@@ -6,7 +6,7 @@
 class OrganizationsController < ApplicationController
   include OrganizationScoping
 
-  before_action :require_organization_membership!, only: :create
+  before_action :authorize_org_creation!, only: :create
 
   def index
     account_id = current_account_id
@@ -14,9 +14,12 @@ class OrganizationsController < ApplicationController
 
     # AC-001: SOLO organizaciones accesibles para el usuario (la RLS es la
     # segunda barrera a nivel cuenta; la visibilidad por organización es app).
-    @organizations = accessible_organizations
-    Tenancy::Context.with(account_id: account_id, organization_id: org_id) do
-      # El contexto queda fijado también para renders parciales del request.
+    @organizations = account_id ? accessible_organizations : []
+    if account_id
+      Tenancy::Context.with(account_id: account_id, organization_id: org_id) do
+        @organization ||= Tenancy::Organization.new
+      end
+    else
       @organization ||= Tenancy::Organization.new
     end
   end
@@ -66,6 +69,17 @@ class OrganizationsController < ApplicationController
   end
 
   private
+
+  # Crear organizaciones exige contexto activo O capability de gestión a nivel
+  # cuenta (permite la PRIMERA organización de una cuenta nueva).
+  def authorize_org_creation!
+    return if current_organization.present?
+
+    account = Tenancy::Account.find_by(id: current_account_id)
+    return if account && Current.user.can?(:manage_organizations, scope: account)
+
+    render plain: "Forbidden", status: :forbidden
+  end
 
   def organization_params
     params.require(:tenancy_organization).permit(:name)

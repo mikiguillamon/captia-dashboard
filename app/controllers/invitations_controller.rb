@@ -48,7 +48,7 @@ class InvitationsController < ApplicationController
                 notice: "Bienvenido a #{invitation.organization.name}.",
                 status: :see_other
   rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
-    return invalid_redirect
+    invalid_redirect
   end
 
   private

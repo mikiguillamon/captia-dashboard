@@ -28,6 +28,13 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
+    # El rate_limit usa el cache store (memory en test): sin esta limpieza,
+    # los intentos acumulados entre suites del mismo proceso disparan el
+    # límite de login de forma intermitente según el orden de ejecución.
+    setup do
+      Rails.cache.clear
+    end
+
     # Sin fixtures: los tests crean sus propios datos. El chequeo previo de FK
     # de FixtureSet escribe en pg_catalog.pg_constraint, vedado al rol
     # no-superusuario captia_app (ADR-0002).

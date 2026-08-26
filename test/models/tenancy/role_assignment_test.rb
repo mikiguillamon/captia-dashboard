@@ -45,7 +45,7 @@ module Tenancy
       assignment = Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
                                                    scope_id: @account.id, role: "admin_cuenta")
       Tenancy::RoleAssignment.set_exception!(
-        assignment: assignment, actor_real: @actor, deny: [:manage_organizations]
+        assignment: assignment, actor_real: @actor, deny: [ :manage_organizations ]
       )
 
       assert_not @user.can?(:manage_organizations, scope: @org_a),
@@ -57,7 +57,7 @@ module Tenancy
       assignment = Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Organization",
                                                    scope_id: @org_a.id, role: "operativo")
       Tenancy::RoleAssignment.set_exception!(
-        assignment: assignment, actor_real: @actor, allow: [:view_audit]
+        assignment: assignment, actor_real: @actor, allow: [ :view_audit ]
       )
 
       assert @user.can?(:view_audit, scope: @org_a)
@@ -71,7 +71,7 @@ module Tenancy
 
       assert_difference "AuditLog.count", 1 do
         Tenancy::RoleAssignment.set_exception!(
-          assignment: assignment, actor_real: @actor, deny: [:invite_users]
+          assignment: assignment, actor_real: @actor, deny: [ :invite_users ]
         )
       end
       log = AuditLog.last
@@ -85,7 +85,7 @@ module Tenancy
                                                    scope_id: @account.id, role: "tecnico")
       error = assert_raises(ActiveRecord::RecordInvalid) do
         Tenancy::RoleAssignment.set_exception!(
-          assignment: assignment, actor_real: @actor, allow: ["capacidad_inexistente"]
+          assignment: assignment, actor_real: @actor, allow: [ "capacidad_inexistente" ]
         )
       end
       assert_match(/desconocidas/, error.message)

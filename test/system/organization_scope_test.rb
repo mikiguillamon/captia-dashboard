@@ -17,7 +17,7 @@ class OrganizationScopeTest < ApplicationSystemTestCase
                                  password: "contrasena-segura-123", account: @account)
     Tenancy::RoleAssignment.create!(user: @admin_cuenta, scope_type: "Tenancy::Account",
                                     scope_id: @account.id, role: "admin_cuenta")
-    [@org1, @org2, @org3].each do |org|
+    [ @org1, @org2, @org3 ].each do |org|
       Tenancy::Context.with(account_id: @account.id) do
         Tenancy::Membership.create!(user: @admin_cuenta, organization: org)
       end

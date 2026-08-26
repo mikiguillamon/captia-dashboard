@@ -36,7 +36,7 @@ class ImpersonationSecurityTest < ActionDispatch::IntegrationTest
   end
 
   test "sin re-auth password la impersonación responde 403" do
-    assert_no_difference ["Impersonation.count", "AuditLog.count"] do
+    assert_no_difference [ "Impersonation.count", "AuditLog.count" ] do
       post impersonation_path, params: { target_user_id: @cliente.id, password: "" }
     end
     assert_response :forbidden
