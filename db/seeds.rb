@@ -1,6 +1,9 @@
 # Datos demo idempotentes para desarrollo (soporte AC-001 y roles PRD §3).
 # Altas de cuentas = provisión interna → Tenancy::Context.provisioning;
 # escrituras tenant siempre dentro de Context.with (D-07).
+# SOLO desarrollo: db:seed en producción no debe crear un superadmin con
+# contraseña conocida (review F2).
+return unless Rails.env.development?
 
 TENANCY_DEMO_PASSWORD = "captia-demo-2026"
 

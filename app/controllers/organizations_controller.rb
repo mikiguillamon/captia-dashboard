@@ -70,13 +70,15 @@ class OrganizationsController < ApplicationController
 
   private
 
-  # Crear organizaciones exige contexto activo O capability de gestión a nivel
-  # cuenta (permite la PRIMERA organización de una cuenta nueva).
+  # Crear organizaciones exige capability manage_organizations SIEMPRE
+  # (review F5): con org activa se evalúa sobre ella; sin org activa (primera
+  # de la cuenta) sobre la cuenta. Nunca basta "tener una org activa".
   def authorize_org_creation!
-    return if current_organization.present?
-
     account = Tenancy::Account.find_by(id: current_account_id)
-    return if account && Current.user.can?(:manage_organizations, scope: account)
+    return render(plain: "Forbidden", status: :forbidden) if account.nil?
+
+    scope = current_organization || account
+    return if Current.user.can?(:manage_organizations, scope: scope)
 
     render plain: "Forbidden", status: :forbidden
   end

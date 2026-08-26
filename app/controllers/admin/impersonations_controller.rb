@@ -7,7 +7,10 @@ module Admin
     before_action :require_impersonate_capability, only: :new
 
     def new
-      @targets = User.where.not(id: Current.user.id).order(:email_address)
+      # Review F4: solo usuarios del ALCANCE del iniciador (misma cuenta en el
+      # skeleton); jamás emails cross-tenant.
+      @targets = User.where(account_id: Current.user.account_id)
+                     .where.not(id: Current.user.id).order(:email_address)
     end
 
     def create

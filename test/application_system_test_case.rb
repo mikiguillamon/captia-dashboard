@@ -17,4 +17,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # Los navegadores headless en paralelo agotan recursos y provocan crashes
   # de Chrome: los system tests corren en serie.
   parallelize(workers: 1)
+
+  # Arranques en frío de Chrome/Puma en suite completa pueden superar el
+  # default de 2s en el primer render tras submit.
+  Capybara.default_max_wait_time = 6
 end

@@ -16,10 +16,12 @@ class AdminImpersonationsTest < ApplicationSystemTestCase
     Tenancy::RoleAssignment.create!(user: @staff, scope_type: "Tenancy::Account",
                                     scope_id: @account.id, role: "superadmin")
 
+    # Objetivo LEGÍTIMO de gestión: admin_cuenta puede crear organizaciones
+    # (con operativo la creación se deniega por diseño desde review F5).
     @cliente = User.create!(email_address: "clientecito@captia.test",
                             password: "contrasena-segura-123", account: @account)
-    Tenancy::RoleAssignment.create!(user: @cliente, scope_type: "Tenancy::Organization",
-                                    scope_id: @org.id, role: "operativo")
+    Tenancy::RoleAssignment.create!(user: @cliente, scope_type: "Tenancy::Account",
+                                    scope_id: @account.id, role: "admin_cuenta")
     Tenancy::Context.with(account_id: @account.id) do
       Tenancy::Membership.create!(user: @cliente, organization: @org)
     end

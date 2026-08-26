@@ -1,7 +1,7 @@
 # Aplica las políticas RLS de tenancy (D-07 / ADR-0002) desde db/policies/.
-# Nota: el dumper de schema NO serializa políticas RLS; por eso la app usa
-# config.active_record.schema_format = :sql (db/structure.sql) y los tests
-# reciben las políticas al preparar la base test.
+# Mecanismo real por entorno (review F10): dev/prod ejecutan esta migración;
+# la BD de TEST las recibe vía reaplicación idempotente en test/test_helper.rb
+# (el dumper de schema.rb no serializa políticas RLS).
 class EnableTenancyRls < ActiveRecord::Migration[8.1]
   POLICY_FILES = %w[accounts_rls organizations_rls].freeze
 

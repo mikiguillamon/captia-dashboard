@@ -25,13 +25,15 @@ class InvitationsController < ApplicationController
     )
     return invalid_redirect unless invitation
 
-    # Un-solo-uso: se marca ANTES de crear nada para cerrar la ventana de replay.
-    invitation.update!(used_at: Time.current)
+    # Review F6: validar TODO antes de consumir; el token se quema solo si la
+    # aceptación completa va a tener éxito (una errata no lo invalida).
+    requested_email = params[:email_address].to_s.strip.downcase
+    return invalid_redirect unless requested_email == invitation.email
 
     account_id = invitation.organization.account_id
     user = nil
     Tenancy::Context.with(account_id: account_id, organization_id: invitation.organization_id) do
-      user = User.find_or_initialize_by(email_address: params[:email_address])
+      user = User.find_or_initialize_by(email_address: invitation.email)
       user.password = params[:password] if user.new_record?
       unless user.save
         @invitation = invitation
@@ -40,6 +42,16 @@ class InvitationsController < ApplicationController
         render :new_accept, status: :unprocessable_entity and return
       end
       Tenancy::Membership.create!(user: user, organization: invitation.organization)
+    end
+
+    # Consumo definitivo del token: éxito garantizado a partir de aquí.
+    invitation.update!(used_at: Time.current)
+
+    # SEG-03/AC-006: mismo criterio que el login para orgs con MFA exigido.
+    if organization_requires_mfa?(user)
+      redirect_to new_session_path,
+                  alert: Auth::SessionsController::GENERIC_ERROR,
+                  status: :see_other and return
     end
 
     # Sesión directa tras aceptar (el usuario acaba de crear credenciales).

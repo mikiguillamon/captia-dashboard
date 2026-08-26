@@ -8,13 +8,14 @@ module Identity
 
     validates :code_digest, presence: true
 
+    # Claim ATÓMICO (review F9): update_all condicional evita doble consumo
+    # bajo concurrencia; devuelve true solo si ESTE request lo reclamó.
     def self.consume!(user:, code:)
       digest = Digest::SHA256.hexdigest(code.to_s.strip)
-      record = user.recovery_codes.find_by(code_digest: digest, used_at: nil)
-      return false unless record
-
-      record.update!(used_at: Time.current)
-      true
+      updated = user.recovery_codes
+                    .where(code_digest: digest, used_at: nil)
+                    .update_all(used_at: Time.current)
+      updated == 1
     end
   end
 end

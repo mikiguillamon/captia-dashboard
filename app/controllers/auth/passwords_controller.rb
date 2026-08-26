@@ -40,9 +40,12 @@ module Auth
 
       user = record.user
       if user.update(params.permit(:password, :password_confirmation))
-        # D-05: consumo definitivo SOLO tras éxito; invalida tokens previos y
-        # REVOCAS todas las sesiones activas.
-        record.update!(used_at: Time.current)
+        # D-05: consumo ATÓMICO del token (review F9), invalida tokens previos
+        # y REVOCAS todas las sesiones activas.
+        consumed = Identity::PasswordResetToken.where(id: record.id, used_at: nil)
+                                               .update_all(used_at: Time.current) == 1
+        return invalid_redirect unless consumed
+
         user.password_reset_tokens.unused.update_all(used_at: Time.current)
         user.sessions.destroy_all
         redirect_to new_session_path,

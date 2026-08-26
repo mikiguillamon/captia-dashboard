@@ -16,7 +16,8 @@ class ApplicationController < ActionController::Base
   prepend_before_action :resolve_impersonation_state
 
   # AC-007/T1-09: toda escritura DURANTE impersonación registra audit_log con
-  # AMBOS actores (el par real/effective viene de Current).
+  # AMBOS actores (el par real/effective viene de Current). Fail-closed: un
+  # fallo de auditoría falla el request — nunca una escritura sin registro.
   around_action :audit_mutative_request
 
   MUTATIVE_METHODS = %w[POST PUT PATCH DELETE].freeze
@@ -98,6 +99,7 @@ class ApplicationController < ActionController::Base
 
   def audit_mutative_request
     yield
+  ensure
     log_mutation_audit!
   end
 
@@ -106,13 +108,12 @@ class ApplicationController < ActionController::Base
     return unless MUTATIVE_METHODS.include?(request.method)
     return if controller_path.start_with?("admin/impersonations", "auth/")
 
+    # Sin rescue: si auditar falla, el request falla (fail-closed, AC-007).
     AuditLog.create!(
       actor_real: Current.actor_real,
       actor_effective: Current.actor_effective,
       action: "#{controller_path}##{action_name}",
       ip: request.remote_ip
     )
-  rescue StandardError => e
-    Rails.logger.warn("audit log failed: #{e.message}")
   end
 end

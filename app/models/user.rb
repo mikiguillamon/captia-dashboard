@@ -20,20 +20,22 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 12 }, allow_nil: true
 
   # D-09: evaluación plantilla → herencia account→org → excepciones.
-  # Las excepciones (deny/allow puntuales) ganan a lo heredado.
+  # Orden DETERMINISTA (review F8): primero asignaciones a nivel cuenta, luego
+  # las de la organización concreta; así una excepción de org más específica
+  # decide siempre al final, independientemente del orden de filas de PG.
   def can?(capability, scope:)
     return false if capability.blank?
 
-    assignments = role_assignments.for_scope_chain(scope).to_a
-    inherited = assignments.any? { |a| a.template_capabilities.include?(capability.to_s) }
-    decision = inherited
+    assignments = role_assignments.for_scope_chain(scope).to_a.sort_by do |a|
+      [ a.scope_type == "Tenancy::Organization" ? 1 : 0, a.id ]
+    end
+
+    decision = assignments.any? { |a| a.template_capabilities.include?(capability.to_s) }
 
     assignments.each do |a|
       exc = a.exception.presence || {}
-      denies = Array(exc["deny"])
-      allows = Array(exc["allow"])
-      decision = false if denies.include?(capability.to_s)
-      decision = true if allows.include?(capability.to_s)
+      decision = false if Array(exc["deny"]).include?(capability.to_s)
+      decision = true if Array(exc["allow"]).include?(capability.to_s)
     end
     decision
   end
