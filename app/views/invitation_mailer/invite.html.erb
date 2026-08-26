@@ -1,0 +1,11 @@
+<div style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+  <h1 style="font-size: 20px; font-weight: 600;">Invitación a <%= @organization.name %></h1>
+  <p>Has sido invitado a colaborar en la organización <strong><%= @organization.name %></strong> de Captia.</p>
+  <p>El enlace es válido durante 7 días y solo se puede usar una vez.</p>
+  <p>
+    <a href="<%= @accept_url %>"
+       style="display: inline-block; background: #2563EB; color: #fff; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">
+      Aceptar invitación
+    </a>
+  </p>
+</div>

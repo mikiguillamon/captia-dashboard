@@ -16,6 +16,11 @@ Rails.application.routes.draw do
 
   resources :passwords, param: :token
 
+  # Invitaciones (TEN-11/FR-011): creación admin + aceptación pública.
+  post "/organizations/:organization_id/invitations", to: "admin/invitations#create", as: :organization_invitations
+  get "/invitations/accept", to: "invitations#new_accept", as: :accept_invitation
+  post "/invitations/accept", to: "invitations#create_accept", as: :accept_invitations
+
   # Recuperación de contraseña (D-05) bajo Auth:: con rutas planas.
   get "/password/forgot", to: "auth/passwords#new_forgot", as: :forgot_password
   post "/password/forgot", to: "auth/passwords#create_forgot"

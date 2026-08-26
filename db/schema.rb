@@ -35,6 +35,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.index ["subject_type", "subject_id"], name: "index_audit_logs_on_subject"
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "invited_by_id", null: false
+    t.bigint "organization_id", null: false
+    t.string "role", null: false
+    t.string "token_digest", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "used_at"
+    t.index ["invited_by_id"], name: "index_invitations_on_invited_by_id"
+    t.index ["organization_id", "email"], name: "index_invitations_on_organization_id_and_email"
+    t.index ["organization_id"], name: "index_invitations_on_organization_id"
+    t.index ["token_digest"], name: "index_invitations_on_token_digest", unique: true
+  end
+
   create_table "memberships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "organization_id", null: false
@@ -57,6 +73,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
 
   create_table "organizations", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.boolean "allow_self_invite", default: false, null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.boolean "require_mfa", default: false, null: false
@@ -119,6 +136,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
 
   add_foreign_key "audit_logs", "users", column: "actor_effective_id"
   add_foreign_key "audit_logs", "users", column: "actor_real_id"
+  add_foreign_key "invitations", "organizations"
+  add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "mfa_enrollments", "users"
