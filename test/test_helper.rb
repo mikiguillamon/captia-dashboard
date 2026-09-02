@@ -8,13 +8,13 @@ require_relative "test_helpers/session_test_helper"
 # parallelize). Dev/producción las aplican vía migración EnableTenancyRls.
 if Rails.env.test?
   conn = ActiveRecord::Base.connection
-  %w[accounts organizations].each do |table|
+  %w[accounts organizations crm_leads crm_contacts crm_opportunities pipeline_stages service_instances].each do |table|
     conn.execute("ALTER TABLE #{table} ENABLE ROW LEVEL SECURITY")
     conn.execute("ALTER TABLE #{table} FORCE ROW LEVEL SECURITY")
   end
   conn.transaction do
     conn.execute("SELECT pg_advisory_xact_lock(20260825)")
-    %w[accounts_rls organizations_rls].each do |file|
+    %w[accounts_rls organizations_rls crm_service_rls].each do |file|
       File.read(Rails.root.join("db/policies/#{file}.sql"))
           .split(/;\s*$/).map(&:strip).reject(&:empty?)
           .reject { |stmt| stmt.start_with?("ALTER TABLE") }

@@ -90,5 +90,46 @@ module Tenancy
       end
       assert_match(/desconocidas/, error.message)
     end
+
+    # --- Fase 2 (Plan 02): capacidades CRM + Servicios -------------------------
+
+    test "Fase 2: comercial tiene capacidades CRM comerciales y desencadena wizard" do
+      Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
+                                      scope_id: @account.id, role: "comercial")
+      assert @user.can?(:manage_leads, scope: @account)
+      assert @user.can?(:manage_contacts, scope: @account)
+      assert @user.can?(:manage_opportunities, scope: @account)
+      assert @user.can?(:manage_pipeline_stages, scope: @account)
+      assert @user.can?(:convert_opportunity, scope: @account)
+      # Comercial NO gestiona catálogo de servicios (AC-003).
+      assert_not @user.can?(:manage_service_instances, scope: @account)
+      assert_not @user.can?(:manage_service_types, scope: @account)
+    end
+
+    test "Fase 2: tecnico gestiona instancias y configuración operativa" do
+      Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
+                                      scope_id: @account.id, role: "tecnico")
+      assert @user.can?(:manage_service_instances, scope: @account)
+      assert @user.can?(:manage_service_config, scope: @account)
+      assert_not @user.can?(:manage_leads, scope: @account)
+    end
+
+    test "Fase 2: solo superadmin gestiona tipos de servicio" do
+      sa = Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
+                                           scope_id: @account.id, role: "superadmin")
+      assert @user.can?(:manage_service_types, scope: @account)
+
+      sa.update!(role: "account_manager")
+      assert_not @user.can?(:manage_service_types, scope: @account)
+    end
+
+    test "Fase 2: cliente admin_cuenta gestiona instancias de su organización" do
+      Tenancy::RoleAssignment.create!(user: @user, scope_type: "Tenancy::Account",
+                                      scope_id: @account.id, role: "admin_cuenta")
+      assert @user.can?(:manage_service_instances, scope: @org_a)
+      # Sin capacidades CRM (cliente ajeno al ciclo comercial interno).
+      assert_not @user.can?(:manage_leads, scope: @account)
+      assert_not @user.can?(:convert_opportunity, scope: @account)
+    end
   end
 end

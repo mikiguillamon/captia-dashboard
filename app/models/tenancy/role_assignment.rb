@@ -6,16 +6,39 @@ module Tenancy
   # el catálogo atómico definitivo es la decisión abierta OD-008 (escalar al
   # usuario antes de Fase 3 según AUTONOMY_POLICY).
   class RoleAssignment < ApplicationRecord
+    # NOTA (Fase 2, Plan 02): ampliación de capacidades CRM/Servicios. El
+    # catálogo atómico definitivo sigue siendo OD-008 (escalar antes de Fase 3).
     ROLE_TEMPLATES = {
       # Internos (PRD §3.1)
-      "superadmin"       => %w[manage_organizations view_dashboard invite_users impersonate view_audit],
-      "direccion"        => %w[view_dashboard view_audit],
-      "comercial"        => %w[view_dashboard], # sin contenido operativo sensible (AC-003)
-      "account_manager"  => %w[view_dashboard],
-      "tecnico"          => %w[view_dashboard],
-      # Cliente (PRD §3.2)
-      "admin_cuenta"     => %w[manage_organizations view_dashboard invite_users],
-      "admin_org"        => %w[view_dashboard invite_users],
+      "superadmin"       => %w[
+        manage_organizations view_dashboard invite_users impersonate view_audit
+        manage_leads manage_contacts manage_opportunities manage_pipeline_stages
+        manage_service_types manage_service_instances manage_service_config
+        convert_opportunity
+      ],
+      "direccion"        => %w[
+        view_dashboard view_audit
+        manage_leads manage_contacts manage_opportunities manage_pipeline_stages
+        manage_service_instances convert_opportunity
+      ],
+      # sin contenido operativo sensible (AC-003): solo CRM comercial
+      "comercial"        => %w[
+        view_dashboard
+        manage_leads manage_contacts manage_opportunities manage_pipeline_stages
+        convert_opportunity
+      ],
+      "account_manager"  => %w[
+        view_dashboard
+        manage_opportunities manage_pipeline_stages manage_service_instances
+        convert_opportunity
+      ],
+      "tecnico"          => %w[
+        view_dashboard
+        manage_service_instances manage_service_config
+      ],
+      # Cliente (PRD §3.2) — sin capacidades CRM por defecto
+      "admin_cuenta"     => %w[manage_organizations view_dashboard invite_users manage_service_instances],
+      "admin_org"        => %w[view_dashboard invite_users manage_service_instances],
       "operativo"        => %w[view_dashboard]
     }.freeze
 
