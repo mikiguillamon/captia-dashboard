@@ -10,14 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_000004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
+    t.bigint "assigned_to_id"
     t.datetime "created_at", null: false
+    t.string "industry"
     t.string "name", null: false
+    t.string "source"
+    t.string "status", default: "prospect", null: false
     t.datetime "updated_at", null: false
+    t.index ["assigned_to_id"], name: "index_accounts_on_assigned_to_id"
+    t.index ["status"], name: "index_accounts_on_status"
   end
 
   create_table "audit_logs", force: :cascade do |t|
@@ -33,6 +39,55 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.index ["actor_effective_id"], name: "index_audit_logs_on_actor_effective_id"
     t.index ["actor_real_id"], name: "index_audit_logs_on_actor_real_id"
     t.index ["subject_type", "subject_id"], name: "index_audit_logs_on_subject"
+  end
+
+  create_table "crm_contacts", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "phone"
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_crm_contacts_on_account_id"
+    t.index ["email"], name: "index_crm_contacts_on_email"
+  end
+
+  create_table "crm_leads", force: :cascade do |t|
+    t.bigint "account_id"
+    t.bigint "assigned_to_id"
+    t.string "company"
+    t.datetime "converted_at"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.bigint "organization_id"
+    t.string "source"
+    t.string "status", default: "new", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_crm_leads_on_account_id"
+    t.index ["assigned_to_id"], name: "index_crm_leads_on_assigned_to_id"
+    t.index ["email"], name: "index_crm_leads_on_email"
+    t.index ["organization_id"], name: "index_crm_leads_on_organization_id"
+    t.index ["status"], name: "index_crm_leads_on_status"
+  end
+
+  create_table "crm_opportunities", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.date "expected_close_date"
+    t.string "name", null: false
+    t.text "notes"
+    t.integer "probability", default: 0, null: false
+    t.string "source"
+    t.bigint "stage_id"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.integer "value_cents", default: 0, null: false
+    t.index ["account_id"], name: "index_crm_opportunities_on_account_id"
+    t.index ["stage_id"], name: "index_crm_opportunities_on_stage_id"
+    t.index ["user_id"], name: "index_crm_opportunities_on_user_id"
   end
 
   create_table "impersonations", force: :cascade do |t|
@@ -106,6 +161,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
+  create_table "pipeline_stages", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "color", default: "#64748b", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.integer "probability", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "position"], name: "index_pipeline_stages_on_account_id_and_position", unique: true
+    t.index ["account_id"], name: "index_pipeline_stages_on_account_id"
+  end
+
   create_table "recovery_codes", force: :cascade do |t|
     t.string "code_digest", null: false
     t.datetime "created_at", null: false
@@ -127,6 +194,48 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_070850) do
     t.index ["scope_type", "scope_id"], name: "index_role_assignments_on_scope_type_and_scope_id"
     t.index ["user_id", "scope_type", "scope_id"], name: "index_role_assignments_on_user_id_and_scope_type_and_scope_id"
     t.index ["user_id"], name: "index_role_assignments_on_user_id"
+  end
+
+  create_table "service_instances", force: :cascade do |t|
+    t.jsonb "configuration", default: {}, null: false
+    t.date "contractual_end_date"
+    t.date "contractual_start_date"
+    t.string "contractual_state", default: "pending_start", null: false
+    t.datetime "created_at", null: false
+    t.float "error_rate", default: 0.0, null: false
+    t.string "health_state", default: "unknown", null: false
+    t.date "historical_access_until"
+    t.datetime "last_heartbeat_at"
+    t.integer "latency_ms", default: 0, null: false
+    t.string "name", null: false
+    t.string "operational_state", default: "stopped", null: false
+    t.bigint "organization_id", null: false
+    t.bigint "service_type_id", null: false
+    t.string "slug", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contractual_state"], name: "index_service_instances_on_contractual_state"
+    t.index ["health_state"], name: "index_service_instances_on_health_state"
+    t.index ["operational_state"], name: "index_service_instances_on_operational_state"
+    t.index ["organization_id", "service_type_id"], name: "index_service_instances_on_organization_id_and_service_type_id"
+    t.index ["organization_id", "slug"], name: "index_service_instances_on_organization_id_and_slug", unique: true
+    t.index ["organization_id"], name: "index_service_instances_on_organization_id"
+    t.index ["service_type_id"], name: "index_service_instances_on_service_type_id"
+    t.index ["type"], name: "index_service_instances_on_type"
+  end
+
+  create_table "service_types", force: :cascade do |t|
+    t.jsonb "config_schema", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.jsonb "default_config", default: {}, null: false
+    t.integer "default_retention_days", default: 365, null: false
+    t.text "description"
+    t.integer "display_order", default: 0, null: false
+    t.string "icon"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["display_order"], name: "index_service_types_on_display_order"
+    t.index ["name"], name: "index_service_types_on_name", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|

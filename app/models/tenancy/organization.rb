@@ -4,6 +4,10 @@ module Tenancy
 
     has_many :memberships, dependent: :destroy
     has_many :users, through: :memberships
+    # Fase 2: catálogo de servicios (SERV-01..02). Una organización mantiene
+    # múltiples instancias de servicio; la generación de slug de ServiceInstance
+    # consulta esta asociación para garantizar unicidad por organización.
+    has_many :service_instances, dependent: :destroy
     # Los role_assignments referencian aquí vía (scope_type, scope_id) plano;
     # sin belongs_to polimórfico para mantener creaciones por columnas (D-01).
 

@@ -54,3 +54,48 @@ Tenancy::Context.provisioning do
   end
   demo.update!(account: alpha) unless demo.account_id == alpha.id
 end
+
+# ServiceType reference data (Phase 2)
+ServiceType.find_or_create_by!(name: "email_assistant") do |st|
+  st.description = "Procesamiento automático de emails entrantes"
+  st.config_schema = ServiceType::EMAIL_ASSISTANT_SCHEMA
+  st.default_config = {}
+  st.default_retention_days = 90
+  st.icon = "mail"
+  st.display_order = 1
+end
+
+ServiceType.find_or_create_by!(name: "chatbot") do |st|
+  st.description = "Asistente conversacional para web/chat"
+  st.config_schema = ServiceType::CHATBOT_SCHEMA
+  st.default_config = {}
+  st.default_retention_days = 90
+  st.icon = "chat-bubble-left-right"
+  st.display_order = 2
+end
+
+ServiceType.find_or_create_by!(name: "voice_assistant") do |st|
+  st.description = "Asistente de voz para llamadas telefónicas"
+  st.config_schema = ServiceType::VOICE_ASSISTANT_SCHEMA
+  st.default_config = {}
+  st.default_retention_days = 180
+  st.icon = "phone"
+  st.display_order = 3
+end
+
+# Default pipeline stages for demo account
+if alpha = Tenancy::Account.find_by(name: "Alpha Demo")
+  stages = [
+    { name: "Prospecting", position: 1, probability: 10, color: "#64748b" },
+    { name: "Qualified", position: 2, probability: 25, color: "#0ea5e9" },
+    { name: "Proposal", position: 3, probability: 50, color: "#f59e0b" },
+    { name: "Negotiation", position: 4, probability: 75, color: "#8b5cf6" },
+    { name: "Won", position: 5, probability: 100, color: "#22c55e" },
+    { name: "Lost", position: 6, probability: 0, color: "#ef4444" }
+  ]
+  stages.each do |attrs|
+    alpha.pipeline_stages.find_or_create_by!(name: attrs[:name]) do |ps|
+      ps.assign_attributes(attrs)
+    end
+  end
+end

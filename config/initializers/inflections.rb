@@ -14,3 +14,10 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+# Fase 2: el namespace CRM (app/models/crm/) debe resolverse como constant «CRM»
+# (todas mayúsculas), no «Crm». Zeitwerk cameliza el directorio crm/ a Crm por
+# defecto, lo que rompería la autocarga de CRM::Lead/Contact/Opportunity.
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym "CRM"
+end
