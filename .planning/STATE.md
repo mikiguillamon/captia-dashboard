@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 01 complete (3/3) — ready to discuss Phase 2
-last_updated: 2026-08-26T11:37:00.065Z
+status: in_progress
+stopped_at: Phase 02 Wave 1 cerrado (02-01/02-02/02-03 completados y validados) — pendientes 02-04..02-14
+last_updated: 2026-09-02T00:00:00.000Z
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 13
+  total_plans: 17
+  completed_plans: 6
+  percent: 35
 ---
 
 # State: Captia Dashboard
@@ -33,7 +33,7 @@ See: `.planning/PROJECT.md` (updated 2026-08-24)
 | # | Name | Status | Plans |
 |---|------|--------|-------|
 | 1 | Fundación e identidad segura | ✓ Complete | 3/3 |
-| 2 | CRM, aprovisionamiento y catálogo de servicios | ○ Not planned | 0/0 |
+| 2 | CRM, aprovisionamiento y catálogo de servicios | ◆ In progress | 3/14 |
 | 3 | Núcleo de eventos, API privada y actividad | ○ Not planned | 0/0 |
 | 4 | Tipos de servicio (Email, Chatbot, Voice) | ○ Not planned | 0/0 |
 | 5 | Dashboards, métricas y frescura | ○ Not planned | 0/0 |
@@ -43,15 +43,15 @@ See: `.planning/PROJECT.md` (updated 2026-08-24)
 
 ## Current Position
 
-**Phase:** 2 (CRM, aprovisionamiento y catálogo de servicios) — CONTEXT GATHERED
-Plan: Not started
-**Next:** `/gsd-plan-phase 2` (CONTEXT.md exists)
+**Phase:** 2 (CRM, aprovisionamiento y catálogo de servicios) — IN PROGRESS
+**Plans:** 3/14 completados (02-01 esquema, 02-02 RLS, 02-03 validación) — Wave 1 cerrado
+**Next:** `/gsd-execute-phase 2` (Wave 3+: 02-04..02-14)
 
 ## Session Continuity
 
-Last session: 2026-08-27T15:30:00.000Z
-Stopped at: Phase 2 context gathered via discuss-phase; 6 gray areas resolved, ready to plan
-Resume file: .planning/phases/02-crm-aprovisionamiento-y-cat-logo-de-servicios/02-CONTEXT.md
+Last session: 2026-09-02
+Stopped at: Wave 1 validado y commiteado — pendiente continuar con Wave 3 (controllers/UI CRM + catálogo)
+Resume file: .planning/phases/02-crm-aprovisionamiento-y-cat-logo-de-servicios/02-04-PLAN.md
 
 ## Blockers / Gates
 
@@ -66,6 +66,8 @@ Resume file: .planning/phases/02-crm-aprovisionamiento-y-cat-logo-de-servicios/0
 | 2 | Granularidad standard (8 fases mvp verticales) por volumen de 155 reqs y RISK-001 | 2026-08-24 | roadmap |
 | 3 | Stack aprobado: Ruby on Rails 8.1 + Hotwire + Solid Queue/Cache/Cable (Opción A de research/STACK.md) | 2026-08-24 | Fase 1 desbloqueada; ADR pendiente en scaffold |
 | 4 | Fase 2 context gathered: 6 gray areas resolved (Pipeline UX, Conversion Wizard, Service Config, 3-State Machine, CRM-Tenancy, Pipeline Stages) | 2026-08-27 | Fase 2 ready to plan |
+| 5 | Ejecución secuencial inline (runtime codex sin worktree/agentes gsd) — se ejecuta sobre árbol principal | 2026-09-02 | Fase 2 execución |
+| 6 | Cierre Wave 1: validado el código pre-existente (models/migrations/RLS/validator), corregidas 5 desviaciones, migraciones y tests OK | 2026-09-02 | Fase 2 (02-01..03) |
 
 ---
 *Last updated: 2026-08-24 after project initialization*
