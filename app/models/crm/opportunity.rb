@@ -17,6 +17,6 @@ module CRM
     validates :probability, numericality: { in: 0..100 }
 
     scope :won, -> { joins(:stage).where(pipeline_stages: { probability: 100 }) }
-    scope :open, -> { where.not(stage_id: PipelineStage.where(probability: [0, 100]).select(:id)) }
+    scope :open, -> { where.not(stage_id: PipelineStage.where(probability: [ 0, 100 ]).select(:id)) }
   end
 end

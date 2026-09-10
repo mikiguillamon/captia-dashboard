@@ -1,0 +1,35 @@
+<%= form_with model: contact, url: contact.persisted? ? crm_contact_path(contact) : crm_contacts_path,
+      class: "flex flex-col gap-3" do |form| %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="space-y-1">
+      <%= form.label :first_name, "Nombre", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :first_name, required: true, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :last_name, "Apellidos", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :last_name, required: true, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :email, "Email", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.email_field :email, required: true, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :phone, "Teléfono", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :phone, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :role, "Rol", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :role, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+  </div>
+
+  <% if contact.errors.any? %>
+    <p role="alert" aria-live="polite" class="text-sm text-red-600">
+      <%= contact.errors.full_messages.to_sentence %>
+    </p>
+  <% end %>
+
+  <%= form.submit contact.persisted? ? "Guardar cambios" : "Crear contacto",
+        data: { turbo_submits_with: "Guardando…" },
+        class: "rounded-md bg-blue-600 text-white text-sm font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 self-start" %>
+<% end %>

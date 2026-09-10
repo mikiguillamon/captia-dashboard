@@ -21,5 +21,11 @@ module Tenancy
         assigned_to_id: lead.assigned_to_id
       )
     end
+
+    # CRM-01/03: convierte un lead en esta cuenta creando su Contacto asociado
+    # y marcando el lead como convertido (vía Lead#convert!).
+    def convert_lead!(lead)
+      lead.convert!(account: self)
+    end
   end
 end

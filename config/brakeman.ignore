@@ -1,0 +1,28 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "fa40ffbd9db008ce861b70b96f0f8d0faeb54b2e91d8e5323583e47de6f7a2cc",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/crm/contacts_controller.rb",
+      "line": 95,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:crm_contact).permit(:first_name, :last_name, :email, :phone, :role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CRM::ContactsController",
+        "method": "contact_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "Falso positivo: CRM::Contact#role es un cargo descriptivo (p. ej. \"CEO\"), sin relación con autorización. account_id NO está en permit (se fija vía Tenancy::Context + RLS), por lo que no hay mass assignment de scope ni privilegios."
+    }
+  ],
+  "brakeman_version": "8.0.6"
+}

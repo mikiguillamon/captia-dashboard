@@ -1,0 +1,34 @@
+<% content_for :title, "Contactos" %>
+
+<main class="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
+  <header class="flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-slate-900">Contactos</h1>
+    <%= link_to "Nuevo contacto", new_crm_contact_path,
+          data: { turbo_frame: "new_contact" },
+          class: "rounded-md bg-blue-600 text-white text-sm font-medium py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2" %>
+  </header>
+
+  <%= form_with url: crm_contacts_path, method: :get, data: { turbo_action: "advance", turbo_frame: "contacts_list" },
+        class: "flex flex-col sm:flex-row gap-2 sm:items-center" do |form| %>
+    <%= form.search_field :q, value: params[:q], placeholder: "Buscar por nombre o email",
+          class: "flex-1 rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    <%= form.submit "Filtrar", class: "rounded-md bg-slate-200 text-slate-700 text-sm font-medium py-2 px-4 hover:bg-slate-300" %>
+  <% end %>
+
+  <%= turbo_frame_tag "contacts_list" do %>
+    <ul id="contacts" class="space-y-2">
+      <%= render partial: "crm/contacts/contact", collection: @contacts %>
+    </ul>
+
+    <% if @contacts.empty? %>
+      <div id="empty_state" class="bg-slate-100 rounded-lg p-6 text-center space-y-2">
+        <h2 class="text-lg font-semibold text-slate-900">No hay contactos aún</h2>
+        <p class="text-slate-600">Crea tu primer contacto.</p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= turbo_frame_tag "new_contact" do %>
+    <%= render "crm/contacts/form", contact: @contact %>
+  <% end %>
+</main>

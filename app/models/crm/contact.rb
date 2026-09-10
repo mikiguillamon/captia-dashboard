@@ -13,5 +13,12 @@ module CRM
     def full_name
       "#{first_name} #{last_name}"
     end
+
+    scope :search, ->(query) {
+      return all if query.blank?
+
+      q = "%#{query.strip}%"
+      where("first_name ILIKE :q OR last_name ILIKE :q OR email ILIKE :q", q: q)
+    }
   end
 end

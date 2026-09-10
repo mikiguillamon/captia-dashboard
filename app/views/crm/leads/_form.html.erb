@@ -1,0 +1,40 @@
+<%= form_with model: lead, url: lead.persisted? ? crm_lead_path(lead) : crm_leads_path,
+      class: "flex flex-col gap-3" do |form| %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="space-y-1">
+      <%= form.label :name, "Nombre", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :name, required: true, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :email, "Email", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.email_field :email, required: true, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :company, "Empresa", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :company, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :source, "Origen", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :source, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :status, "Estado", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.select :status, options_for_select(CRM::Lead::STATUSES, lead.status), {},
+            class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+    </div>
+    <div class="space-y-1">
+      <%= form.label :assigned_to_id, "Asignado a", class: "block text-sm font-medium text-slate-700" %>
+      <%= form.number_field :assigned_to_id, class: "w-full rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    </div>
+  </div>
+
+  <% if lead.errors.any? %>
+    <p role="alert" aria-live="polite" class="text-sm text-red-600">
+      <%= lead.errors.full_messages.to_sentence %>
+    </p>
+  <% end %>
+
+  <%= form.submit lead.persisted? ? "Guardar cambios" : "Crear lead",
+        data: { turbo_submits_with: "Guardando…" },
+        class: "rounded-md bg-blue-600 text-white text-sm font-medium py-2 px-4 hover:bg-blue-700 disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 self-start" %>
+<% end %>

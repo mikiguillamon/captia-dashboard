@@ -9,6 +9,20 @@ Rails.application.routes.draw do
     collection { post :switch }
   end
 
+  # CRM interno (Fase 2) — Leads, Contacts, Opportunities, Pipeline Stages.
+  namespace :crm do
+    resources :leads, only: %i[index show new create edit update destroy] do
+      member { post :convert }
+    end
+    resources :contacts, only: %i[index show new create edit update destroy]
+    resources :opportunities, only: %i[index show new create edit update destroy] do
+      member { patch :update_stage }
+    end
+    resources :pipeline_stages, only: %i[index new create edit update destroy] do
+      collection { patch :reorder }
+    end
+  end
+
   # MFA (01-02): enrollment TOTP y challenge post-password.
   get "/mfa/enrollment", to: "auth/mfa/enrollments#new", as: :mfa_enrollment
   post "/mfa/enrollment", to: "auth/mfa/enrollments#create"

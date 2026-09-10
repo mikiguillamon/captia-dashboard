@@ -1,0 +1,36 @@
+<% content_for :title, "Leads" %>
+
+<main class="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
+  <header class="flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-slate-900">Leads</h1>
+    <%= link_to "Nuevo lead", new_crm_lead_path,
+          data: { turbo_frame: "new_lead" },
+          class: "rounded-md bg-blue-600 text-white text-sm font-medium py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2" %>
+  </header>
+
+  <%= form_with url: crm_leads_path, method: :get, data: { turbo_action: "advance", turbo_frame: "leads_list" },
+        class: "flex flex-col sm:flex-row gap-2 sm:items-center" do |form| %>
+    <%= form.search_field :q, value: params[:q], placeholder: "Buscar por nombre, email o empresa",
+          class: "flex-1 rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" %>
+    <%= form.select :status, options_for_select(CRM::Lead::STATUSES, params[:status]), include_blank: "Todos los estados",
+          class: "rounded-md border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" %>
+    <%= form.submit "Filtrar", class: "rounded-md bg-slate-200 text-slate-700 text-sm font-medium py-2 px-4 hover:bg-slate-300" %>
+  <% end %>
+
+  <%= turbo_frame_tag "leads_list" do %>
+    <ul id="leads" class="space-y-2">
+      <%= render partial: "crm/leads/lead", collection: @leads %>
+    </ul>
+
+    <% if @leads.empty? %>
+      <div id="empty_state" class="bg-slate-100 rounded-lg p-6 text-center space-y-2">
+        <h2 class="text-lg font-semibold text-slate-900">No hay leads aún</h2>
+        <p class="text-slate-600">Crea tu primer lead para iniciar el ciclo comercial.</p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= turbo_frame_tag "new_lead" do %>
+    <%= render "crm/leads/form", lead: @lead %>
+  <% end %>
+</main>
