@@ -14,18 +14,21 @@ Use this precedence when sources conflict:
 4. Accepted ADRs in `docs/architecture/adr/` for architectural decisions.
 5. `docs/architecture/ARCHITECTURE.md` for current architecture.
 6. `docs/quality/QUALITY_BAR.md` for quality requirements.
-7. `.planning/` for current GSD execution state and plans.
+7. `.planning/` for product reference material (PRD, ADRs, roadmap, requirements). This is read-only reference: the active development lifecycle is no longer driven by GSD.
 8. Existing implementation and tests for factual current-state evidence.
 
 Do not preload every document. Read only what is relevant to the current task.
 
 ## Workflow
 
-GSD Core is the primary project lifecycle orchestrator.
+Superpowers is the active development workflow.
 
-Do not automatically run Superpowers brainstorming, writing-plans, subagent-driven-development, or equivalent lifecycle workflows while executing a GSD-managed phase.
+Work moves through: brainstorming → writing-plans → subagent-driven-development → finishing-a-development-branch.
 
-Superpowers may be used when explicitly requested or for a targeted problem where its specialized workflow is justified.
+GSD is no longer used. `.planning/` is not deleted: it remains product reference material
+(PRD, ADRs, roadmap, the 155 v1 requirements) that continues to serve as the source of truth
+for product behavior and scope. The active lifecycle — design specs, plans, and execution — is
+handled by Superpowers, with its artifacts kept under `docs/superpowers/`.
 
 ## Autonomy
 
@@ -173,17 +176,14 @@ Architecture not yet mapped. Follow existing patterns found in the codebase.
 No project skills found. Add skills to any of: `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, `.github/skills/`, or `.codex/skills/` with a `SKILL.md` index file.
 <!-- GSD:skills-end -->
 
-<!-- GSD:workflow-start source:GSD defaults -->
-## GSD Workflow Enforcement
+<!-- GSD:workflow-start source:Superpowers defaults -->
+## Workflow Enforcement
 
-Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
+Work is driven through the Superpowers workflow: brainstorming → writing-plans →
+subagent-driven-development → finishing-a-development-branch. Design specs and plans live under
+`docs/superpowers/specs/` and `docs/superpowers/plans/`.
 
-Use these entry points:
-- `/gsd-quick` for small fixes, doc updates, and ad-hoc tasks
-- `/gsd-debug` for investigation and bug fixing
-- `/gsd-execute-phase` for planned phase work
-
-Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+Do not start implementation on `main` without explicit user consent.
 <!-- GSD:workflow-end -->
 
 <!-- GSD:profile-start -->

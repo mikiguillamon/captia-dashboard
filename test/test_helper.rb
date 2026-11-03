@@ -25,8 +25,15 @@ end
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+    # La suite corre en serie por defecto. La autorización de tenancy usa
+    # Tenancy::Context (SET LOCAL app.account_id dentro de una transacción) con
+    # un pool de conexiones reducido (max_connections: 5) y RLS FORCE en 9 tablas.
+    # Bajo `parallelize(workers: :number_of_processors)` los forks heredan estado
+    # de conexión/SET LOCAL entrelazado y la suite cuelga silenciosamente (deadlock
+    # en advisory lock + DDL de RLS). Serial es determinista y verde (~4s).
+    # Opt-in a paralelismo con PARALLEL_WORKERS > 1 solo si se subsana la
+    # concurrencia del contexto tenant (no está pendiente en este momento).
+    parallelize(workers: Integer(ENV.fetch("PARALLEL_WORKERS", 1)))
 
     # El rate_limit usa el cache store (memory en test): sin esta limpieza,
     # los intentos acumulados entre suites del mismo proceso disparan el

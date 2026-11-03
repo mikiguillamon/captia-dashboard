@@ -15,12 +15,16 @@ Rails.application.routes.draw do
       member { post :convert }
     end
     resources :contacts, only: %i[index show new create edit update destroy]
-    resources :opportunities, only: %i[index show new create edit update destroy] do
-      member { patch :update_stage }
-    end
-    resources :pipeline_stages, only: %i[index new create edit update destroy] do
-      collection { patch :reorder }
-    end
+    # PENDIENTE (Slice A — cierre de Fase 2, CRM-04/05/06): oportunidades y
+    # pipeline tienen schema/modelo pero aún no controller ni vistas. Las rutas
+    # se inactivan temporalmente para no exponer 500s desde main; se reactivan
+    # al implementar Crm::OpportunitiesController y Crm::PipelineStagesController.
+    # resources :opportunities, only: %i[index show new create edit update destroy] do
+    #   member { patch :update_stage }
+    # end
+    # resources :pipeline_stages, only: %i[index new create edit update destroy] do
+    #   collection { patch :reorder }
+    # end
   end
 
   # MFA (01-02): enrollment TOTP y challenge post-password.
